@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('login') }}">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <div id="email-error" class="flash error" style="display: none;"></div>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <div id="password-error" class="flash error" style="display: none;"></div>
+
+            <button type="submit">Login</button>
+            <div class="nav-link">
+                <a href="{{ url_for('register') }}">Don't have an account? Register</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#email').on('input', function () {
+                var email = $(this).val();
+                var errorMessage = '';
+                if (!email.includes('@')) {
+                    errorMessage = 'Email must contain an @ symbol.';
+                }
+                $('#email-error').text(errorMessage).toggle(!!errorMessage);
+            });
+
+            $('#password').on('input', function () {
+                var password = $(this).val();
+                var errorMessage = '';
+                if (password.length < 8) {
+                    errorMessage = 'Password must be at least 8 characters long.';
+                }
+                $('#password-error').text(errorMessage).toggle(!!errorMessage);
+            });
+        });
+    </script>
+</body>
+</html>
